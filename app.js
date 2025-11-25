@@ -57,6 +57,54 @@ function toggleTaskStatus(taskId) {
     }
 }
 
+function editTask(taskId) {
+    const tasks = getTasks();
+    const task = tasks.find(t => t.id === taskId);
+    
+    if (!task) return;
+
+    const taskItem = document.querySelector(`[data-id="${taskId}"]`);
+    const taskText = taskItem.querySelector('.task-text');
+    const currentText = taskText.textContent;
+
+    const editInput = document.createElement('input');
+    editInput.type = 'text';
+    editInput.className = 'task-edit-input';
+    editInput.value = currentText;
+    
+    taskItem.classList.add('editing');
+    taskText.replaceWith(editInput);
+    editInput.focus();
+    editInput.select();
+
+    function saveEdit() {
+        const newText = editInput.value.trim();
+        
+        if (newText === '') {
+            alert('La tarea no puede estar vacía.');
+            editInput.focus();
+            return;
+        }
+
+        task.title = newText;
+        saveTasks(tasks);
+        renderTasks();
+    }
+
+    function cancelEdit() {
+        renderTasks();
+    }
+
+    editInput.addEventListener('blur', saveEdit);
+    editInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+            editInput.blur();
+        } else if (e.key === 'Escape') {
+            cancelEdit();
+        }
+    });
+}
+
 function renderTasks() {
     const tasks = getTasks();
     tasksList.innerHTML = '';
@@ -88,6 +136,7 @@ function renderTasks() {
         const editButton = document.createElement('button');
         editButton.className = 'edit-button';
         editButton.textContent = 'Editar';
+        editButton.addEventListener('click', () => editTask(task.id));
 
         const deleteButton = document.createElement('button');
         deleteButton.className = 'delete-button';
