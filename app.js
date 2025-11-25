@@ -46,6 +46,17 @@ function addTask() {
     renderTasks();
 }
 
+function toggleTaskStatus(taskId) {
+    const tasks = getTasks();
+    const task = tasks.find(t => t.id === taskId);
+    
+    if (task) {
+        task.completed = !task.completed;
+        saveTasks(tasks);
+        renderTasks();
+    }
+}
+
 function renderTasks() {
     const tasks = getTasks();
     tasksList.innerHTML = '';
@@ -57,12 +68,35 @@ function renderTasks() {
     tasks.forEach(task => {
         const taskItem = document.createElement('li');
         taskItem.className = 'task-item';
+        if (task.completed) {
+            taskItem.classList.add('completed');
+        }
+        taskItem.setAttribute('data-id', task.id);
+
+        const checkbox = document.createElement('input');
+        checkbox.type = 'checkbox';
+        checkbox.className = 'task-checkbox';
+        checkbox.checked = task.completed;
+        checkbox.addEventListener('change', () => toggleTaskStatus(task.id));
+
         taskItem.setAttribute('data-id', task.id);
 
         const taskText = document.createElement('span');
         taskText.className = 'task-text';
         taskText.textContent = task.title;
 
+        const editButton = document.createElement('button');
+        editButton.className = 'edit-button';
+        editButton.textContent = 'Editar';
+
+        const deleteButton = document.createElement('button');
+        deleteButton.className = 'delete-button';
+        deleteButton.textContent = 'Eliminar';
+
+        taskItem.appendChild(checkbox);
+        taskItem.appendChild(taskText);
+        taskItem.appendChild(editButton);
+        taskItem.appendChild(deleteButton);
         taskItem.appendChild(taskText);
         tasksList.appendChild(taskItem);
     });
