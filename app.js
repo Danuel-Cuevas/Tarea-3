@@ -1,23 +1,15 @@
-// ============================================
-// REFERENCIAS DEL DOM
-// ============================================
+
 const taskInput = document.getElementById('taskInput');
 const addButton = document.getElementById('addButton');
 const tasksList = document.getElementById('tasksList');
 
-// ============================================
-// CONFIGURACIÓN
-// ============================================
 const STORAGE_KEY = 'tasks';
-
-// ============================================
-// FUNCIONES DE PERSISTENCIA (LocalStorage)
-// ============================================
-
 /**
  * Obtiene todas las tareas guardadas en localStorage
  * Retorna un array vacío si no hay tareas guardadas
  */
+const STORAGE_KEY = 'tasks';
+
 function getTasks() {
     const tasksJSON = localStorage.getItem(STORAGE_KEY);
     return tasksJSON ? JSON.parse(tasksJSON) : [];
@@ -30,11 +22,6 @@ function getTasks() {
 function saveTasks(tasks) {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(tasks));
 }
-
-// ============================================
-// FUNCIONES DE UTILIDAD
-// ============================================
-
 /**
  * Crea un nuevo objeto tarea con id único, título y estado inicial
  * @param {string} title - El texto de la tarea
@@ -57,6 +44,11 @@ function validateTaskText(value) {
     const trimmed = value.trim();
     if (trimmed === '') {
         alert('Por favor, escribe una tarea antes de agregarla.');
+function validateInput() {
+    const value = taskInput.value.trim();
+    if (value === '') {
+        alert('Por favor, escribe una tarea antes de agregarla.');
+        taskInput.focus();
         return false;
     }
     return true;
@@ -72,10 +64,6 @@ function findTaskById(taskId) {
     return tasks.find(t => t.id === taskId) || null;
 }
 
-// ============================================
-// OPERACIONES CRUD
-// ============================================
-
 /**
  * CREATE: Agrega una nueva tarea al array y la guarda en localStorage
  * Flujo: Validar → Crear → Guardar → Renderizar
@@ -85,11 +73,14 @@ function addTask() {
     
     if (!validateTaskText(inputValue)) {
         taskInput.focus();
+function addTask() {
+    if (!validateInput()) {
         return;
     }
 
     const tasks = getTasks();
     const newTask = createTask(inputValue);
+    const newTask = createTask(taskInput.value);
     tasks.push(newTask);
     saveTasks(tasks);
 
@@ -158,7 +149,6 @@ function createTaskElement(task) {
 
     return taskItem;
 }
-
 /**
  * UPDATE: Cambia el estado completado/pendiente de una tarea
  * Actualiza localStorage y re-renderiza la lista
@@ -174,7 +164,6 @@ function toggleTaskStatus(taskId) {
         renderTasks();
     }
 }
-
 /**
  * UPDATE: Permite editar el texto de una tarea existente
  * Convierte el texto en un input editable
@@ -182,6 +171,10 @@ function toggleTaskStatus(taskId) {
  */
 function editTask(taskId) {
     const task = findTaskById(taskId);
+function editTask(taskId) {
+    const tasks = getTasks();
+    const task = tasks.find(t => t.id === taskId);
+    
     if (!task) return;
 
     const taskItem = document.querySelector(`[data-id="${taskId}"]`);
@@ -202,6 +195,8 @@ function editTask(taskId) {
         const newText = editInput.value.trim();
         
         if (!validateTaskText(newText)) {
+        if (newText === '') {
+            alert('La tarea no puede estar vacía.');
             editInput.focus();
             return;
         }
@@ -213,6 +208,9 @@ function editTask(taskId) {
             saveTasks(tasks);
             renderTasks();
         }
+        task.title = newText;
+        saveTasks(tasks);
+        renderTasks();
     }
 
     function cancelEdit() {
@@ -244,23 +242,63 @@ function deleteTask(taskId) {
     renderTasks();
 }
 
-// ============================================
-// EVENT LISTENERS
-// ============================================
-
 // Agregar tarea al hacer clic en el botón
 addButton.addEventListener('click', addTask);
 
 // Agregar tarea al presionar Enter en el input
+function renderTasks() {
+    const tasks = getTasks();
+    tasksList.innerHTML = '';
+
+    if (tasks.length === 0) {
+        return;
+    }
+
+    tasks.forEach(task => {
+        const taskItem = document.createElement('li');
+        taskItem.className = 'task-item';
+        if (task.completed) {
+            taskItem.classList.add('completed');
+        }
+        taskItem.setAttribute('data-id', task.id);
+
+        const checkbox = document.createElement('input');
+        checkbox.type = 'checkbox';
+        checkbox.className = 'task-checkbox';
+        checkbox.checked = task.completed;
+        checkbox.addEventListener('change', () => toggleTaskStatus(task.id));
+
+        taskItem.setAttribute('data-id', task.id);
+
+        const taskText = document.createElement('span');
+        taskText.className = 'task-text';
+        taskText.textContent = task.title;
+
+        const editButton = document.createElement('button');
+        editButton.className = 'edit-button';
+        editButton.textContent = 'Editar';
+        editButton.addEventListener('click', () => editTask(task.id));
+
+        const deleteButton = document.createElement('button');
+        deleteButton.className = 'delete-button';
+        deleteButton.textContent = 'Eliminar';
+
+        taskItem.appendChild(checkbox);
+        taskItem.appendChild(taskText);
+        taskItem.appendChild(editButton);
+        taskItem.appendChild(deleteButton);
+        taskItem.appendChild(taskText);
+        tasksList.appendChild(taskItem);
+    });
+}
+
+addButton.addEventListener('click', addTask);
+
 taskInput.addEventListener('keypress', (e) => {
     if (e.key === 'Enter') {
         addTask();
     }
 });
-
-// ============================================
-// INICIALIZACIÓN
-// ============================================
 // Cargar y renderizar las tareas al iniciar la aplicación
 renderTasks();
 
