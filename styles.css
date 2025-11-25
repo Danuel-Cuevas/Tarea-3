@@ -126,6 +126,29 @@ body {
     color: #6c757d;
 }
 
+.task-item.editing {
+    background: #fff3cd;
+    border-left-color: #ffc107;
+    box-shadow: 0 0 0 2px rgba(255, 193, 7, 0.2);
+}
+
+.task-edit-input {
+    flex: 1;
+    padding: 8px 12px;
+    border: 2px solid #ffc107;
+    border-radius: 6px;
+    font-size: 1rem;
+    font-family: inherit;
+    background: white;
+    outline: none;
+    transition: all 0.2s ease;
+}
+
+.task-edit-input:focus {
+    border-color: #ffb300;
+    box-shadow: 0 0 0 3px rgba(255, 193, 7, 0.2);
+}
+
 .edit-button,
 .delete-button {
     padding: 8px 16px;
