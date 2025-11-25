@@ -16,6 +16,23 @@ body {
 
 .container {
     background: white;
+    border-radius: 20px;
+    box-shadow: 0 25px 70px rgba(0, 0, 0, 0.25);
+    width: 100%;
+    max-width: 600px;
+    padding: 45px;
+    animation: fadeIn 0.4s ease-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
     border-radius: 16px;
     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
     width: 100%;
@@ -25,6 +42,15 @@ body {
 
 .title {
     text-align: center;
+    color: #2d3748;
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 35px;
+    letter-spacing: -0.5px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
     color: #333;
     font-size: 2.5rem;
     font-weight: 700;
@@ -40,6 +66,13 @@ body {
 
 .task-input {
     flex: 1;
+    padding: 15px 20px;
+    border: 2px solid #e2e8f0;
+    border-radius: 10px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    outline: none;
+    background: #f7fafc;
     padding: 14px 18px;
     border: 2px solid #e0e0e0;
     border-radius: 8px;
@@ -50,6 +83,17 @@ body {
 
 .task-input:focus {
     border-color: #667eea;
+    background: white;
+    box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+    transform: translateY(-1px);
+}
+
+.add-button {
+    padding: 15px 32px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    border-radius: 10px;
     box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
 }
 
@@ -64,15 +108,22 @@ body {
     cursor: pointer;
     transition: all 0.3s ease;
     white-space: nowrap;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
 }
 
 .add-button:hover {
     transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
     box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
 }
 
 .add-button:active {
     transform: translateY(0);
+    box-shadow: 0 2px 10px rgba(102, 126, 234, 0.3);
+}
+
+.tasks-section {
+    margin-top: 25px;
 }
 
 .tasks-section {
@@ -83,11 +134,32 @@ body {
     list-style: none;
     display: flex;
     flex-direction: column;
+    gap: 14px;
     gap: 12px;
 }
 
 .task-item {
     background: #f8f9fa;
+    padding: 18px 22px;
+    border-radius: 12px;
+    border-left: 4px solid #667eea;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateX(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
     padding: 16px 20px;
     border-radius: 8px;
     border-left: 4px solid #667eea;
@@ -100,6 +172,45 @@ body {
 .task-item:hover {
     background: #f0f1f3;
     transform: translateX(4px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+}
+
+.task-item.completed {
+    opacity: 0.75;
+    border-left-color: #48bb78;
+    background: #f0fdf4;
+}
+
+.task-item.completed:hover {
+    background: #dcfce7;
+}
+
+.task-item.editing {
+    background: #fffbeb;
+    border-left-color: #f59e0b;
+    box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.15);
+    animation: pulse 0.3s ease-out;
+}
+
+@keyframes pulse {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.02);
+    }
+}
+
+.task-checkbox {
+    width: 22px;
+    height: 22px;
+    cursor: pointer;
+    accent-color: #667eea;
+    transition: transform 0.2s ease;
+}
+
+.task-checkbox:hover {
+    transform: scale(1.1);
 }
 
 .task-item.completed {
@@ -116,6 +227,10 @@ body {
 
 .task-text {
     flex: 1;
+    color: #2d3748;
+    font-size: 1rem;
+    transition: all 0.2s ease;
+    font-weight: 500;
     color: #333;
     font-size: 1rem;
     transition: all 0.2s ease;
@@ -123,6 +238,7 @@ body {
 
 .task-item.completed .task-text {
     text-decoration: line-through;
+    color: #718096;
     color: #6c757d;
 }
 
@@ -134,6 +250,9 @@ body {
 
 .task-edit-input {
     flex: 1;
+    padding: 10px 14px;
+    border: 2px solid #f59e0b;
+    border-radius: 8px;
     padding: 8px 12px;
     border: 2px solid #ffc107;
     border-radius: 6px;
@@ -142,6 +261,12 @@ body {
     background: white;
     outline: none;
     transition: all 0.2s ease;
+    font-weight: 500;
+}
+
+.task-edit-input:focus {
+    border-color: #d97706;
+    box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.2);
 }
 
 .task-edit-input:focus {
@@ -151,6 +276,33 @@ body {
 
 .edit-button,
 .delete-button {
+    padding: 9px 18px;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.edit-button {
+    background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+    color: #1f2937;
+}
+
+.edit-button:hover {
+    background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(245, 158, 11, 0.3);
+}
+
+.edit-button:active {
+    transform: translateY(0);
+}
+
+.delete-button {
+    background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
     padding: 8px 16px;
     border: none;
     border-radius: 6px;
@@ -176,6 +328,13 @@ body {
 }
 
 .delete-button:hover {
+    background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(239, 68, 68, 0.3);
+}
+
+.delete-button:active {
+    transform: translateY(0);
     background: #c82333;
     transform: translateY(-1px);
 }
@@ -196,6 +355,17 @@ body {
     
     .add-button {
         width: 100%;
+    }
+
+    .task-item {
+        padding: 14px 16px;
+        gap: 10px;
+    }
+
+    .edit-button,
+    .delete-button {
+        padding: 8px 14px;
+        font-size: 0.8rem;
     }
 }
 
