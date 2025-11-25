@@ -127,6 +127,8 @@ function renderTasks() {
         checkbox.checked = task.completed;
         checkbox.addEventListener('change', () => toggleTaskStatus(task.id));
 
+        taskItem.setAttribute('data-id', task.id);
+
         const taskText = document.createElement('span');
         taskText.className = 'task-text';
         taskText.textContent = task.title;
@@ -144,6 +146,7 @@ function renderTasks() {
         taskItem.appendChild(taskText);
         taskItem.appendChild(editButton);
         taskItem.appendChild(deleteButton);
+        taskItem.appendChild(taskText);
         tasksList.appendChild(taskItem);
     });
 }
